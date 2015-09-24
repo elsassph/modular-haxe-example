@@ -63,7 +63,7 @@ an entry point.
 ### Loading
 
 This sample project includes a utility class to load modules at run time, as well as its associated 
-CSS file if desired. 
+CSS file if desired.
 
 The function `Require.module(name, loadCss)` returns a promise.
 
@@ -72,6 +72,9 @@ The function `Require.module(name, loadCss)` returns a promise.
 	function moduleLoaded(name) {
 		new Module1(); // that's all
     }
+
+If loading any resource fails, the promise will be rejected and you'll be able to call the method
+again to retry loading the module.
 
 Note: this is all livereload-friendly!
 
@@ -84,10 +87,13 @@ Also if you are going to use reflection in the main application (eg. `Std.is`), 
 reflection in the module code, otherwise the compiler will not generate the reflection metadata.
 Alternatively you can set `-dce no` in the compiler arguments for the module.
 
+The utility class uses the browser ES6 Promise object - make sure to include a shim if you want to 
+target a wide range of browsers.
+
 ## Further improvements
 
-The provided utility class is probably not super robust and it works in modern browsers with native 
-ES6 Promise support. It requires a shim for Promise and there will probably be subtle issues to fix.
+The provided utility class seems to be working well in modern browsers but we'll probably discover 
+subtle issues...
 
 Node support should be easy to add, but it's not done yet.
 

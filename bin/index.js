@@ -57,6 +57,18 @@ haxe_ds_StringMap.prototype = {
 		if(this.rh == null) return false;
 		return this.rh.hasOwnProperty("$" + key);
 	}
+	,remove: function(key) {
+		if(__map_reserved[key] != null) {
+			key = "$" + key;
+			if(this.rh == null || !this.rh.hasOwnProperty(key)) return false;
+			delete(this.rh[key]);
+			return true;
+		} else {
+			if(!this.h.hasOwnProperty(key)) return false;
+			delete(this.h[key]);
+			return true;
+		}
+	}
 };
 var util_Require = function() { };
 util_Require.module = function(name,loadCss) {
@@ -66,21 +78,30 @@ util_Require.module = function(name,loadCss) {
 		var doc = window.document;
 		var pending;
 		if(loadCss) pending = 2; else pending = 1;
+		var css = null;
+		var script = null;
+		var hasFailed = false;
 		var resourceLoaded = function() {
 			if(--pending == 0) resolve(name);
 		};
 		var resourceFailed = function() {
-			reject(name);
+			if(!hasFailed) {
+				hasFailed = true;
+				util_Require.loaded.remove(name);
+				if(css != null) doc.body.removeChild(css);
+				doc.body.removeChild(script);
+				reject(name);
+			}
 		};
 		if(loadCss) {
-			var css = doc.createElement("link");
+			css = doc.createElement("link");
 			css.rel = "stylesheet";
 			css.onload = resourceLoaded;
 			css.onerror = resourceFailed;
 			css.href = "" + name + ".css";
 			doc.body.appendChild(css);
 		}
-		var script = doc.createElement("script");
+		script = doc.createElement("script");
 		script.onload = resourceLoaded;
 		script.onerror = resourceFailed;
 		script.src = "" + name + ".js";

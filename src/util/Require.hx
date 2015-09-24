@@ -1,6 +1,8 @@
 package util;
 
 import js.Browser;
+import js.html.LinkElement;
+import js.html.ScriptElement;
 import js.Promise;
 
 class Require
@@ -15,6 +17,9 @@ class Require
 		var p = new Promise<String>(function(resolve, reject) {
 			var doc = Browser.document;
 			var pending = loadCss ? 2 : 1;
+			var css:LinkElement = null;
+			var script:ScriptElement = null;
+			var hasFailed:Bool = false;
 			
 			function resourceLoaded() 
 			{
@@ -23,12 +28,21 @@ class Require
 			}
 			function resourceFailed()
 			{
-				reject(name);
+				if (!hasFailed)
+				{
+					hasFailed = true;
+					
+					loaded.remove(name); // retry
+					if (css != null) doc.body.removeChild(css);
+					doc.body.removeChild(script);
+					
+					reject(name);
+				}
 			}
 			
 			if (loadCss)
 			{
-				var css = doc.createLinkElement();
+				css = doc.createLinkElement();
 				css.rel = 'stylesheet';
 				css.onload = resourceLoaded;
 				css.onerror = resourceFailed;
@@ -36,7 +50,7 @@ class Require
 				doc.body.appendChild(css);
 			}
 			
-			var script = doc.createScriptElement();
+			script = doc.createScriptElement();
 			script.onload = resourceLoaded;
 			script.onerror = resourceFailed;
 			script.src = '$name.js';
