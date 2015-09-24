@@ -1,7 +1,7 @@
 # Modular Haxe JS
 
 This project demonstrates the creation of a Haxe-JavaScript modular project with on-demand 
-loading of modules.
+loading of modules (JS + CSS).
 
 It's really easy!
 
@@ -28,6 +28,9 @@ When the JS is loaded, the reference to the class is exposed globally:
 
 	window.module1.Module1 // browser
 	exports.module1.Module1 // node
+
+Note: in a module, you MUST expose every type that you will explicitely use in your main
+application's code (`new`, `Std.is`, `Type` reflection...).
 
 ### On-demand loading
 
