@@ -1,0 +1,12 @@
+-cp src
+
+--each
+
+-js bin/module1.js
+module1.Module1
+
+--next
+
+-js bin/index.js
+-main Main
+--macro exclude('module1')
