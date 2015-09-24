@@ -82,8 +82,8 @@ util_Require.module = function(name,loadCss) {
 		}
 		var script = doc.createElement("script");
 		script.onload = resourceLoaded;
-		script.src = "" + name + ".js";
 		script.onerror = resourceFailed;
+		script.src = "" + name + ".js";
 		doc.body.appendChild(script);
 	});
 	util_Require.loaded.set(name,p);

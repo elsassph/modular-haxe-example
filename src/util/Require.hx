@@ -38,8 +38,8 @@ class Require
 			
 			var script = doc.createScriptElement();
 			script.onload = resourceLoaded;
-			script.src = '$name.js';
 			script.onerror = resourceFailed;
+			script.src = '$name.js';
 			doc.body.appendChild(script);
 		});
 		
