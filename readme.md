@@ -69,4 +69,8 @@ The function `Require.module(name, loadCss)` returns a promise.
 
 	Require.module('module1').then(moduleLoaded, moduleFailed);
 
-Note: the code is probably not super robust, but it works in modern browsers. 
+	function moduleLoaded(name) {
+		new Module1(); // that's all
+    }
+
+Note: the code is probably not super robust, but it works in modern browsers. Node isn't supported but it should be easy to do. 
