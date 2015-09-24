@@ -1,7 +1,6 @@
 package util;
 
 import js.Browser;
-import js.html.LinkElement;
 import js.Promise;
 
 class Require
