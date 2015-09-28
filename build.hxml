@@ -1,4 +1,6 @@
 -cp src
+-debug
+--macro util.Stub.modules()
 
 --each
 

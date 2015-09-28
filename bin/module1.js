@@ -1,5 +1,6 @@
 (function (console, $hx_exports) { "use strict";
 $hx_exports.module1 = $hx_exports.module1 || {};
+$hx_exports.module1.sub = $hx_exports.module1.sub || {};
 function $extend(from, fields) {
 	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
 	for (var name in fields) proto[name] = fields[name];
@@ -22,8 +23,12 @@ module1_Module1.__interfaces__ = [module1_Interface1];
 module1_Module1.__super__ = module1_Dependency2;
 module1_Module1.prototype = $extend(module1_Dependency2.prototype,{
 });
-var module1_sub_Dependency1 = function() {
+var module1_sub_Dependency1 = $hx_exports.module1.sub.Dependency1 = function() {
 	var doc = window.document;
 	this.view = doc.createTextNode("Hello module1");
 };
-})(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
+if (typeof module1 == "undefined") var module1 = {}
+$hx_join._refs = ($hx_join._refs || {}); $hx_join._refs.module1 = {module1:module1};
+})(typeof console != "undefined" ? console : {log:function(){}}, typeof $hx_join != "undefined" ? $hx_join : $hx_join = {});
+
+//# sourceMappingURL=module1.js.map

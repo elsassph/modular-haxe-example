@@ -1,5 +1,6 @@
 (function (console, $hx_exports) { "use strict";
 $hx_exports.module1 = $hx_exports.module1 || {};
+$hx_exports.module1.sub = $hx_exports.module1.sub || {};
 var Main = function() {
 	var doc = window.document;
 	this.root = doc.createElement("div");
@@ -11,6 +12,7 @@ var Main = function() {
 	link.innerText = "Load module";
 	this.root.appendChild(link);
 };
+Main.__name__ = true;
 Main.main = function() {
 	var app = new Main();
 };
@@ -29,10 +31,35 @@ Main.prototype = {
 		console.log("Module " + name + " failed");
 	}
 };
+Math.__name__ = true;
+var Reflect = function() { };
+Reflect.__name__ = true;
+Reflect.field = function(o,field) {
+	try {
+		return o[field];
+	} catch( e ) {
+		return null;
+	}
+};
+Reflect.fields = function(o) {
+	var a = [];
+	if(o != null) {
+		var hasOwnProperty = Object.prototype.hasOwnProperty;
+		for( var f in o ) {
+		if(f != "__id__" && f != "hx__closures__" && hasOwnProperty.call(o,f)) a.push(f);
+		}
+	}
+	return a;
+};
+Reflect.isFunction = function(f) {
+	return typeof(f) == "function" && !(f.__name__ || f.__ename__);
+};
 var haxe_IMap = function() { };
+haxe_IMap.__name__ = true;
 var haxe_ds_StringMap = function() {
 	this.h = { };
 };
+haxe_ds_StringMap.__name__ = true;
 haxe_ds_StringMap.__interfaces__ = [haxe_IMap];
 haxe_ds_StringMap.prototype = {
 	set: function(key,value) {
@@ -71,6 +98,7 @@ haxe_ds_StringMap.prototype = {
 	}
 };
 var util_Require = function() { };
+util_Require.__name__ = true;
 util_Require.module = function(name,loadCss) {
 	if(loadCss == null) loadCss = true;
 	if(util_Require.loaded.exists(name)) return util_Require.loaded.get(name);
@@ -82,7 +110,10 @@ util_Require.module = function(name,loadCss) {
 		var script = null;
 		var hasFailed = false;
 		var resourceLoaded = function() {
-			if(--pending == 0) resolve(name);
+			if(--pending == 0) {
+				util_Require.joinModules(name);
+				resolve(name);
+			}
 		};
 		var resourceFailed = function() {
 			if(!hasFailed) {
@@ -110,9 +141,50 @@ util_Require.module = function(name,loadCss) {
 	util_Require.loaded.set(name,p);
 	return p;
 };
+util_Require.joinModules = function(loadedModule) {
+	var join = $hx_join;
+	var refs = join._refs;
+	var _g = 0;
+	var _g1 = Reflect.fields(refs);
+	while(_g < _g1.length) {
+		var module = _g1[_g];
+		++_g;
+		util_Require.joinModule(module,Reflect.field(refs,module));
+	}
+};
+util_Require.joinModule = function(updateModule,refs) {
+	console.log("Join " + updateModule);
+	var join = $hx_join;
+	var _g = 0;
+	var _g1 = Reflect.fields(refs);
+	while(_g < _g1.length) {
+		var prop = _g1[_g];
+		++_g;
+		util_Require.merge(Reflect.field(join,prop),Reflect.field(refs,prop));
+	}
+};
+util_Require.merge = function(from,to) {
+	var _g = 0;
+	var _g1 = Reflect.fields(from);
+	while(_g < _g1.length) {
+		var prop = _g1[_g];
+		++_g;
+		var value = Reflect.field(from,prop);
+		if(Reflect.isFunction(value)) to[prop] = value; else {
+			if(!Object.prototype.hasOwnProperty.call(to,prop)) to[prop] = { };
+			util_Require.merge(value,Reflect.field(to,prop));
+		}
+	}
+};
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
+String.__name__ = true;
+Array.__name__ = true;
 var __map_reserved = {}
 util_Require.loaded = new haxe_ds_StringMap();
 Main.main();
-})(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
+if (typeof module1 == "undefined") var module1 = {}
+$hx_join._refs = ($hx_join._refs || {}); $hx_join._refs.index = {module1:module1};
+})(typeof console != "undefined" ? console : {log:function(){}}, typeof $hx_join != "undefined" ? $hx_join : $hx_join = {});
+
+//# sourceMappingURL=index.js.map
