@@ -31,7 +31,6 @@ var module1_sub_Dependency1 = $hx_exports.module1.sub.Dependency1 = function() {
 	var doc = window.document;
 	this.view = doc.createTextNode("Hello module1");
 };
-$hx_join._refs = ($hx_join._refs || {}); $hx_join._refs.module1 = {module1:module1,com:com};
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof $hx_join != "undefined" ? $hx_join : $hx_join = {});
 
 //# sourceMappingURL=module1.js.map

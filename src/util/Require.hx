@@ -9,6 +9,11 @@ class Require
 {
 	static var loaded:Map<String, Promise<String>> = new Map();
 	
+	/**
+	 * Load JS module
+	 * @param	name	JS file name without extension
+	 * @param	loadCss	Please also load a CSSof the same name
+	 */
 	static public function module(name:String, loadCss:Bool = true):Promise<String>
 	{
 		if (loaded.exists(name)) 
@@ -24,10 +29,7 @@ class Require
 			function resourceLoaded() 
 			{
 				if (--pending == 0) 
-				{
-					joinModules(name);
 					resolve(name);
-				}
 			}
 			function resourceFailed()
 			{
@@ -63,40 +65,4 @@ class Require
 		loaded.set(name, p);
 		return p;
 	}
-	
-	static function joinModules(loadedModule:String) 
-	{
-		var join:Dynamic = untyped __js__("$hx_join");
-		var refs = join._refs;
-		for (module in Reflect.fields(refs))
-		{
-			joinModule(module, Reflect.field(refs, module));
-		}
-	}
-	
-	static function joinModule(updateModule:String, refs:Dynamic) 
-	{
-		trace('Join $updateModule');
-		var join:Dynamic = untyped __js__("$hx_join");
-		for (prop in Reflect.fields(refs))
-		{
-			merge(Reflect.field(join, prop), Reflect.field(refs, prop));
-		}
-	}
-	
-	static function merge(from:Dynamic, to:Dynamic) 
-	{
-		for (prop in Reflect.fields(from))
-		{
-			var value = Reflect.field(from, prop);
-			if (Reflect.isFunction(value))
-				Reflect.setField(to, prop, value);
-			else
-			{
-				if (!Reflect.hasField(to, prop)) Reflect.setField(to, prop, {});
-				merge(value, Reflect.field(to, prop));
-			}
-		}
-	}
-	
 }

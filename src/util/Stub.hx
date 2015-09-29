@@ -17,35 +17,40 @@ class Stub
 	static private function generated() 
 	{
 		var output = Compiler.getOutput();
+		if (!FileSystem.exists(output)) return;
+		
 		var moduleName = Path.withoutDirectory(Path.withoutExtension(output));
 		
-		if (!FileSystem.exists(output)) return;
-		var raw = File.getContent(output);
+		var src = File.getContent(output);
+		
+		// find exposed modules packages and store their position
+		// eg. 'com' for 'com.common': $hx_exports.com = $hx_exports.com || {};
 		var reExport = ~/\$hx_exports\.([a-z0-9_]+) = \$/gi;
-		var src = raw;
+		var search = src;
 		var refs = new Array<String>();
 		var indexes = new Array<Int>();
 		var offset = 0;
-		while (reExport.match(src))
+		while (reExport.match(search))
 		{
 			var name = reExport.matched(1);
 			refs.push(name);
 			var pos = reExport.matchedPos();
 			indexes.push(offset + pos.pos);
-			src = reExport.matchedRight();
+			search = reExport.matchedRight();
 			offset += pos.pos + pos.len;
 		}
 		
-		var insert = raw.lastIndexOf('})(typeof');
-		if (insert < 0)
-			throw 'Insertion point not found';
-		src = addInjections(refs, indexes, raw.substr(0, insert))
-			+ addRefs(refs, moduleName)
-			+ addJoinPoint(raw.substr(insert));
+		// process output
+		src = addInjections(refs, indexes, src);
+		src = addJoinPoint(src);
 		
 		File.saveContent(output, src);
 	}
 	
+	/**
+	 * Stub local variable for exposed packages
+	 * eg. var com = $hx_exports.com = $hx_exports.com || {};
+	 */
 	static function addInjections(refs:Array<String>, indexes:Array<Int>, src:String) 
 	{
 		var i = indexes.length - 1;
@@ -59,12 +64,9 @@ class Stub
 		return src;
 	}
 	
-	static function addRefs(refs:Array<String>, moduleName:String) 
-	{
-		var map = [for (ref in refs) '$ref:$ref'].join(',');
-		return '$$hx_join._refs = ($$hx_join._refs || {}); $$hx_join._refs.$moduleName = {$map};\n';
-	}
-	
+	/**
+	 * Make the global (shared) context a "private" variable instead of window/exports
+	 */
 	static function addJoinPoint(src:String) 
 	{
 		return StringTools.replace(src,
