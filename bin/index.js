@@ -1,6 +1,8 @@
 (function (console, $hx_exports) { "use strict";
-$hx_exports.module1 = $hx_exports.module1 || {};
+var module1 = $hx_exports.module1 = $hx_exports.module1 || {};
 $hx_exports.module1.sub = $hx_exports.module1.sub || {};
+var com = $hx_exports.com = $hx_exports.com || {};
+$hx_exports.com.common = $hx_exports.com.common || {};
 var Main = function() {
 	var doc = window.document;
 	this.root = doc.createElement("div");
@@ -54,6 +56,11 @@ Reflect.fields = function(o) {
 Reflect.isFunction = function(f) {
 	return typeof(f) == "function" && !(f.__name__ || f.__ename__);
 };
+var com_common_BaseModule = $hx_exports.com.common.BaseModule = function() {
+	var doc = window.document;
+	this.view = doc.createElement("div");
+};
+com_common_BaseModule.__name__ = true;
 var haxe_IMap = function() { };
 haxe_IMap.__name__ = true;
 var haxe_ds_StringMap = function() {
@@ -183,8 +190,7 @@ Array.__name__ = true;
 var __map_reserved = {}
 util_Require.loaded = new haxe_ds_StringMap();
 Main.main();
-if (typeof module1 == "undefined") var module1 = {}
-$hx_join._refs = ($hx_join._refs || {}); $hx_join._refs.index = {module1:module1};
+$hx_join._refs = ($hx_join._refs || {}); $hx_join._refs.index = {module1:module1,com:com};
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof $hx_join != "undefined" ? $hx_join : $hx_join = {});
 
 //# sourceMappingURL=index.js.map

@@ -6,6 +6,7 @@
 
 -js bin/module1.js
 module1.Module1
+--macro exclude('com.common')
 
 --next
 

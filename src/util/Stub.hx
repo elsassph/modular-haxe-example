@@ -21,30 +21,45 @@ class Stub
 		
 		if (!FileSystem.exists(output)) return;
 		var raw = File.getContent(output);
-		var reExport = ~/\$hx_exports\.([a-z0-9_]+)/;
+		var reExport = ~/\$hx_exports\.([a-z0-9_]+) = \$/gi;
 		var src = raw;
-		var stubs = new Array<String>();
 		var refs = new Array<String>();
+		var indexes = new Array<Int>();
+		var offset = 0;
 		while (reExport.match(src))
 		{
 			var name = reExport.matched(1);
 			refs.push(name);
-			stubs.push('if (typeof $name == "undefined") var $name = {}\n');
-			src = reExport.matchedLeft();
+			var pos = reExport.matchedPos();
+			indexes.push(offset + pos.pos);
+			src = reExport.matchedRight();
+			offset += pos.pos + pos.len;
 		}
 		
 		var insert = raw.lastIndexOf('})(typeof');
 		if (insert < 0)
 			throw 'Insertion point not found';
-		src = raw.substr(0, insert) 
-			+ stubs.join('') 
+		src = addInjections(refs, indexes, raw.substr(0, insert))
 			+ addRefs(refs, moduleName)
 			+ addJoinPoint(raw.substr(insert));
 		
 		File.saveContent(output, src);
 	}
 	
-	static private function addRefs(refs:Array<String>, moduleName:String) 
+	static function addInjections(refs:Array<String>, indexes:Array<Int>, src:String) 
+	{
+		var i = indexes.length - 1;
+		while (i >= 0)
+		{
+			src = src.substr(0, indexes[i])
+				+ 'var ${refs[i]} = ' 
+				+ src.substr(indexes[i]);
+			i--;
+		}
+		return src;
+	}
+	
+	static function addRefs(refs:Array<String>, moduleName:String) 
 	{
 		var map = [for (ref in refs) '$ref:$ref'].join(',');
 		return '$$hx_join._refs = ($$hx_join._refs || {}); $$hx_join._refs.$moduleName = {$map};\n';

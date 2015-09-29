@@ -1,6 +1,8 @@
 (function (console, $hx_exports) { "use strict";
-$hx_exports.module1 = $hx_exports.module1 || {};
+var module1 = $hx_exports.module1 = $hx_exports.module1 || {};
 $hx_exports.module1.sub = $hx_exports.module1.sub || {};
+var com = $hx_exports.com = $hx_exports.com || {};
+$hx_exports.com.common = $hx_exports.com.common || {};
 function $extend(from, fields) {
 	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
 	for (var name in fields) proto[name] = fields[name];
@@ -8,13 +10,15 @@ function $extend(from, fields) {
 	return proto;
 }
 var module1_Dependency2 = function() {
+	com.common.BaseModule.call(this);
 	console.log("Module1 is up");
 };
+module1_Dependency2.__super__ = com.common.BaseModule;
+module1_Dependency2.prototype = $extend(com.common.BaseModule.prototype,{
+});
 var module1_Interface1 = function() { };
 var module1_Module1 = $hx_exports.module1.Module1 = function() {
 	module1_Dependency2.call(this);
-	var doc = window.document;
-	this.view = doc.createElement("div");
 	this.view.className = "module1";
 	this.sub = new module1_sub_Dependency1();
 	this.view.appendChild(this.sub.view);
@@ -27,8 +31,7 @@ var module1_sub_Dependency1 = $hx_exports.module1.sub.Dependency1 = function() {
 	var doc = window.document;
 	this.view = doc.createTextNode("Hello module1");
 };
-if (typeof module1 == "undefined") var module1 = {}
-$hx_join._refs = ($hx_join._refs || {}); $hx_join._refs.module1 = {module1:module1};
+$hx_join._refs = ($hx_join._refs || {}); $hx_join._refs.module1 = {module1:module1,com:com};
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof $hx_join != "undefined" ? $hx_join : $hx_join = {});
 
 //# sourceMappingURL=module1.js.map
