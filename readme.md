@@ -112,19 +112,21 @@ again to retry loading the module.
 
 ## Gotchas
 
-In a module, you MUST `@:expose` every type that you will explicitly use in your main
-application's code (`new`, `Std.is`, `Type` reflection...).
+**Shared classes can not be in the global package.**
+
+**In a module, you MUST `@:expose` every type that you will explicitly use in your main
+application's code (`new`, `Std.is`, `Type` reflection...).**
 
 Also if you are going to use reflection in the main application (eg. `Std.is`), you MUST use some
-reflection in the module code, otherwise the compiler will not generate the reflection metadata.
+reflection in the modules code, otherwise the compiler will not generate the reflection metadata.
 Alternatively you can set `-dce no` in the compiler arguments for the module.
 
-The utility class uses the browser ES6 Promise object - make sure to include a shim if you want to 
+**The utility class uses the browser ES6 Promise object** - make sure to include a shim if you want to 
 target a wide range of browsers.
 
 ## Further improvements
 
-The provided utility class seems to be working well in modern browsers but we'll probably discover 
-subtle issues...
+The provided utility classes seems to be working nicely in modern browsers but it wasn't tested on a
+real project - we'll probably discover subtle issues...
 
 What about some React hot-reload? It should be possible :)
