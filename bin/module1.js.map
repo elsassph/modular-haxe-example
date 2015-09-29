@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"module1.js",
+"sourceRoot":"file:///",
+"sources":["C:/Dev/tests/haxe/modular-haxe-example/src/module1/Dependency2.hx","C:/Dev/tests/haxe/modular-haxe-example/src/module1/Module1.hx","C:/Dev/tests/haxe/modular-haxe-example/src/module1/sub/Dependency1.hx"],
+"names":[],
+"mappings":";;;;;;;;;;;sBAOO,XACP;CACC;CACA,WAAO;;;;;;8BCDD,nBACP;CACC;CACA,EAAkB;CAElB,EAAM;CACN,AAAiB;;;;;;sCCLX,3BACP;CACW;CACV,EAAO,FAAmB;;;;"
+}

@@ -9,6 +9,11 @@ class Require
 {
 	static var loaded:Map<String, Promise<String>> = new Map();
 	
+	/**
+	 * Load JS module
+	 * @param	name	JS file name without extension
+	 * @param	loadCss	Please also load a CSSof the same name
+	 */
 	static public function module(name:String, loadCss:Bool = true):Promise<String>
 	{
 		if (loaded.exists(name)) 
@@ -60,5 +65,4 @@ class Require
 		loaded.set(name, p);
 		return p;
 	}
-	
 }

@@ -1,5 +1,8 @@
 (function (console, $hx_exports) { "use strict";
-$hx_exports.module1 = $hx_exports.module1 || {};
+var module1 = $hx_exports.module1 = $hx_exports.module1 || {};
+$hx_exports.module1.sub = $hx_exports.module1.sub || {};
+var com = $hx_exports.com = $hx_exports.com || {};
+$hx_exports.com.common = $hx_exports.com.common || {};
 var Main = function() {
 	var doc = window.document;
 	this.root = doc.createElement("div");
@@ -28,6 +31,10 @@ Main.prototype = {
 	,moduleFailed: function(name) {
 		console.log("Module " + name + " failed");
 	}
+};
+var com_common_BaseModule = $hx_exports.com.common.BaseModule = function() {
+	var doc = window.document;
+	this.view = doc.createElement("div");
 };
 var haxe_IMap = function() { };
 var haxe_ds_StringMap = function() {
@@ -115,4 +122,6 @@ function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id
 var __map_reserved = {}
 util_Require.loaded = new haxe_ds_StringMap();
 Main.main();
-})(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
+})(typeof console != "undefined" ? console : {log:function(){}}, typeof $hx_scope != "undefined" ? $hx_scope : $hx_scope = {});
+
+//# sourceMappingURL=index.js.map
