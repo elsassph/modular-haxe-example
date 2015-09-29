@@ -71,7 +71,7 @@ class Stub
 	{
 		return StringTools.replace(src,
 			'typeof window != "undefined" ? window : exports' , 
-			'typeof $$hx_join != "undefined" ? $$hx_join : $$hx_join = {}');
+			'typeof $$hx_scope != "undefined" ? $$hx_scope : $$hx_scope = {}');
 	}
 	
 }

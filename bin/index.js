@@ -122,6 +122,6 @@ function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id
 var __map_reserved = {}
 util_Require.loaded = new haxe_ds_StringMap();
 Main.main();
-})(typeof console != "undefined" ? console : {log:function(){}}, typeof $hx_join != "undefined" ? $hx_join : $hx_join = {});
+})(typeof console != "undefined" ? console : {log:function(){}}, typeof $hx_scope != "undefined" ? $hx_scope : $hx_scope = {});
 
 //# sourceMappingURL=index.js.map
