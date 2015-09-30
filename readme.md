@@ -5,7 +5,7 @@ loading of modules (JS + CSS).
 
 It's really easy and absolutely transparent in the code!
 
-## Basics
+## How it works
 
 ### Haxe compiler can exclude classes or entire packages
 
@@ -17,39 +17,35 @@ Compiler argument to exclude an entire package:
 
 	--macro exclude('module1')
 
-### Haxe JS can expose a class to the global context
+You should simply create several JS files with the code you want, excluding the code to share.
+
+### The trick to join several JS modules
+
+Haxe JS can expose a class to the global context:
 
     package module1;
+
     @:expose
 	class Module1 {
 	}
 
-When the JS is loaded, the reference to the class is exposed globally:
+The Haxe compiler will make the class available globally (normally `window` or `exports`) and,
+if the class was excluded, expect that it is available already globally.
 
-	window.module1.Module1 // browser
-	exports.module1.Module1 // node
-
-### The "hack"
-
-Firstly, with a tiny change to Haxe JS output, it is possible to transparently "merge" the scopes 
+The only problem is that it's not really clean to have every shared attached to `window`,
+but with a tiny change to Haxe JS output, it is possible to transparently "merge" the scopes 
 of the different loaded JS files, so that the main JS can instantiate classes from modules, and 
 so that modules can extend classes from the main JS or some other module.
 
-The trick is really as simple as that:
+The first part of the "hack" is really as simple as that:
 	
-	// replace
+	// replace in JS output
 	$hx_exports.com = $hx_exports.com || {};
 	// by
 	var com = $hx_exports.com = $hx_exports.com || {};
 
 Secondly, we don't want to expose on the global scope so we're changing Haxe default to a
-"private" scope called `$hx_scope`. 
-
-Now there's no clean way to actually expose something to `window` or `exports`; you can do it 
-explicitly for now: 
-
-    untyped window.MyPublicClass = MyPublicClass
-    untyped exports.MyPublicClass = MyPublicClass
+"private" shared scope called `$hx_scope`. 
 
 ### On-demand loading
 
@@ -112,17 +108,23 @@ again to retry loading the module.
 
 ## Gotchas
 
-**Shared classes can not be in the global package.**
+- **Shared classes can not be in the global package.**
 
-**In a module, you MUST `@:expose` every type that you will explicitly use in your main
+- **In a module, you MUST `@:expose` every type that you will explicitly use in your main
 application's code (`new`, `Std.is`, `Type` reflection...).**
 
-Also if you are going to use reflection in the main application (eg. `Std.is`), you MUST use some
+- Also if you are going to use reflection in the main application (eg. `Std.is`), you MUST use some
 reflection in the modules code, otherwise the compiler will not generate the reflection metadata.
 Alternatively you can set `-dce no` in the compiler arguments for the module.
 
-**The utility class uses the browser ES6 Promise object** - make sure to include a shim if you want to 
+- **The utility class uses the browser ES6 Promise object** - make sure to include a shim if you want to 
 target a wide range of browsers.
+
+- There's no clean way to actually expose something to `window` or `exports`; you can do it 
+explicitly for now (a little macro could solve it I guess): 
+
+	    untyped window.MyPublicClass = MyPublicClass
+	    untyped exports.MyPublicClass = MyPublicClass
 
 ## Further improvements
 
