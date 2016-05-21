@@ -17,6 +17,10 @@ Compiler argument to exclude an entire package:
 
 	--macro exclude('module1')
 
+Compiler argument to exclude a list of classes from an external file (*apparently faster than using many `exclude`*):
+
+	--macro excludeFile('excludes.txt')
+
 You should simply create several JS files with the code you want, excluding the code to share.
 
 ### The trick to join several JS modules
