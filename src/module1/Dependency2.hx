@@ -1,6 +1,6 @@
 package module1;
 
-import com.common.BaseModule;
+import common.BaseModule;
 
 class Dependency2 extends BaseModule
 {

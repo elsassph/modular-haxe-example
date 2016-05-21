@@ -1,12 +1,15 @@
+-cp lib
 -cp src
 -debug
---macro util.Stub.modules()
+#-D source-map-content
+-dce full
+--macro Stub.modules()
 
 --each
 
 -js bin/module1.js
 module1.Module1
---macro exclude('com.common')
+--macro exclude('common')
 
 --next
 

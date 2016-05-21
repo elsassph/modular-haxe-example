@@ -70,8 +70,7 @@ Here's the example script explained:
 	described, and finishing by `--each` to start defining builds. 
 
 		-cp src
-		-debug
-		--macro util.Stub.modules()
+		--macro Stub.modules()
 		--each
 
 2. The builds (the order doesn't matter)
@@ -82,7 +81,7 @@ Here's the example script explained:
 
 		-js bin/module1.js
 		module1.Module1
-		--macro exclude('com.common')
+		--macro exclude('common')
 
 		--next
 	

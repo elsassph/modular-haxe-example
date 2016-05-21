@@ -1,4 +1,4 @@
-package util;
+package;
 
 import js.Browser;
 import js.html.LinkElement;
@@ -7,12 +7,15 @@ import js.Promise;
 
 class Require
 {
+	static public var jsPath = './';
+	static public var cssPath = './';
+	
 	static var loaded:Map<String, Promise<String>> = new Map();
 	
 	/**
 	 * Load JS module
 	 * @param	name	JS file name without extension
-	 * @param	loadCss	Please also load a CSSof the same name
+	 * @param	loadCss	Please also load a CSS of the same name
 	 */
 	static public function module(name:String, loadCss:Bool = true):Promise<String>
 	{
@@ -51,14 +54,14 @@ class Require
 				css.rel = 'stylesheet';
 				css.onload = resourceLoaded;
 				css.onerror = resourceFailed;
-				css.href = '$name.css';
+				css.href = cssPath + name + '.css';
 				doc.body.appendChild(css);
 			}
 			
 			script = doc.createScriptElement();
 			script.onload = resourceLoaded;
 			script.onerror = resourceFailed;
-			script.src = '$name.js';
+			script.src = jsPath + name + '.js';
 			doc.body.appendChild(script);
 		});
 		

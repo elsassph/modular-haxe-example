@@ -1,4 +1,4 @@
-package com.common;
+package common;
 
 import js.Browser;
 import js.html.DivElement;

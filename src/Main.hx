@@ -4,7 +4,6 @@ import js.Browser;
 import js.html.DivElement;
 import module1.Module1;
 import module1.sub.Dependency1;
-import util.Require;
 
 class Main 
 {
